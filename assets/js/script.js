@@ -3,42 +3,38 @@ apikey = "f4b6deaac15c38f8264e61d13f7b99a1";
 
 // We then created an AJAX call
 $("#city-search").on("click", function (event) {
-    console.log(cityName);
-    var cityName = $("#city-name").val();
     event.preventDefault();
-    cities.push(cityName);
-    console.log(cityName);
+    var cityName = $("#city-name").val();
+    if (cityName != '') {
+        console.log(cities.length);
+        for (i = 0; i <= cities.length; i++) {
+            if (!cities.includes(cityName)) {
+                cities.push(cityName);
+                renderButtons(cityName);
+            }
 
-    renderButtons();
-
+        }
+    }
+    else {
+        return false;
+    }
+    console.log(cities);
+    displayTempinfo(cityName);
 });
 
-function renderButtons() {
-
-    $("#buttons-view").empty();
-
-    for (i = 0; i < cities.length; i++) {
-        var btn = $("<button>");
-        btn.addClass("city-btn");
-        btn.attr("id", cities[i]);
-        btn.attr("data-name", cities[i]);
-        btn.text(cities[i]);
-        $("#buttons-view").append(btn);
-    }
-    displayTempinfo();
+function renderButtons(cityName) {
+    var btn = $("<button>");
+    btn.addClass("city-btn");
+    btn.attr("id", cityName);
+    btn.attr("data-name", cityName);
+    btn.text(cityName);
+    $("#buttons-view").append(btn);
 }
 
 
-function displayTempinfo() {
-    var test = $('#' + cities[i]).val();
-    console.log("Test : " + test);
-
-    var cityName = $("#city-name").val();
-    console.log("city:" + cityName);
+function displayTempinfo(cityName) {
     $("#current-day").empty();
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&apikey=" + apikey;
-
-    console.log(queryURL);
     $.ajax({
         url: queryURL,
         method: "GET"
@@ -48,8 +44,7 @@ function displayTempinfo() {
 
         var header1 = $("<h5>").text("Current Temperatures");
         $("#current-day").append(header1);
-        var city = $("#city-name").val();
-        $("#current-day").append(city);
+        $("#current-day").append(cityName);
         var image = $("<img>").attr("src", "http://openweathermap.org/img/wn/" + response.weather[0].icon + ".png");
         $("#current-day").append(image);
         var date = moment().format(" MMMM Do YYYY");
@@ -57,23 +52,21 @@ function displayTempinfo() {
         var dateT = $("<p>").text("(" + date + ")");
         $("#current-day").append(dateT);
         var tempF = (response.main.temp - 273.15) * 1.80 + 32;
-        console.log(tempF);
+       
         var temp = $("<p>").text("Temperature: " + tempF.toFixed(2) + " °F");
         $("#current-day").append(temp);
         var windSpeed = $("<p>").text("Wind Speed: " + response.wind.speed);
-        console.log(windSpeed);
+       
         $("#current-day").append(windSpeed);
-        var humidity = $("<p>").text("Humidity: " + response.main.humidity);
-        console.log(humidity);
+         var humidity=$("<p>").text("humidity: " +response.main.humidity)
         $("#current-day").append(humidity);
 
 
         var lattitude = response.coord.lat;
-        console.log("lat:" + lattitude);
         var longitude = response.coord.lon;
-        console.log("lon:" + longitude);
+    
 
-        
+
         var uvqueryURL = "http://api.openweathermap.org/data/2.5/uvi?appid=" + apikey + "&lat=" + lattitude + "&lon=" + longitude;
         uvIndex(uvqueryURL);
     });
@@ -81,7 +74,6 @@ function displayTempinfo() {
 
 }
 function uvIndex(uvqueryURL) {
-    console.log("queryURL: " + uvqueryURL);
     $.ajax({
         url: uvqueryURL,
         method: "GET"
@@ -93,7 +85,6 @@ function uvIndex(uvqueryURL) {
         var markid = $("<mark>").text(uvresponse.value);
         markid.attr("id", "uv-index");
         uvIndex.append(markid);
-        console.log(uvresponse.value);
 
 
         if (uvValue >= 0 && uvValue <= 3) {
@@ -113,4 +104,8 @@ function uvIndex(uvqueryURL) {
         }
     });
 }
-$(document).on("click", ".city-btn", displayTempinfo);
+$(document).on("click", ".city-btn", function () {
+    var cityName = $(this).attr("data-name");
+    displayTempinfo(cityName);
+});
+
