@@ -1,11 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Weather Dashboard</title>
+    <!--javascript bootstrap link-->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css"
+        integrity="sha184-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH1+nqUivzIebhndOJK18anvf" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans&display=swap" rel="stylesheet" />
+    <!--css link-->
+    <link rel="stylesheet" href="./assets/css/style.css">
 </head>
+
 <body>
-    
+    <!--Navbar to display the dashboard-->
+    <nav class="navbar navbar-dark bg-dark">
+        <span class="navbar-brand mb-0 h1">Weather Dashboard</span>
+    </nav>
+    <div class="container-fluid">
+        <div class="row" id="main-header">
+            <form class="form-inline col-md-4">
+                <input class="form-control mr-sm-2" type="search" id="city-name" placeholder="Search"
+                    aria-label="Search">
+                <button type="submit" class="btn btn-primary" id="city-search">
+                    <i class="fa fa-search"></i></button>
+            </form>
+            <div class="currenttemp col-md-8" id="current-day">
+        </div>
+    </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div id="buttons-view">
+                <!--append all the cities buttons here-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script src="./assets/js/script.js"></script>
 </body>
 </html>
