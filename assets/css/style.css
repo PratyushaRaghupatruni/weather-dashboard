@@ -25,13 +25,20 @@ background-color:red ;
     font-size: 40px !important;
     padding: 0px;
 }
-
- #list li:hover {
+ li:hover {
     font-weight: bold;
     background-color:  #007bff;
     color:white;
  }
- #list li .close :hover{
-     background-color: red;
-     color:white ;
+ .close{
+    width:50px;
+    height:30px;
+    border-radius:0.3rem;
+    border-width: 2px;
+    border-style: solid;
+ }
+.close:hover{
+      font-weight: bold;
+      background-color:red;  
+      color:white; 
  }

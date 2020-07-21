@@ -14,7 +14,7 @@ $("#city-search").on("click", function (event) {
     event.preventDefault();
 
     //fetching the city we enter in the search field
-    var cityName = $("#city-name").val();
+    var cityName = $("#city-name").val().trim();
     //A condition to test if city name is empty
     if (cityName === '') {
         return false;
@@ -63,7 +63,7 @@ function getstoredCities() {
         $("#list").append(liBtn);
 
         // button to del
-        var delbtn = $("<button class='close'>").text('\u00D7');
+        var delbtn = $("<span class='close'>").text('\u00D7');
         delbtn.addClass(citiesList[i]);
         $("#" + citiesList[i]).append(delbtn);
 
@@ -74,9 +74,9 @@ function getstoredCities() {
 $(document).on("click", ".close", function () {
     //fetching the ser clicked city
     var closeBtn = $(this).parent().attr("id");
-    //deleting the element from array
     $("#"+closeBtn).hide();
     
+     //deleting the element from array
     citiesList.splice(closeBtn, 1);
     //new submission after deleting the cities
     localStorage.setItem("cities", JSON.stringify(citiesList));
