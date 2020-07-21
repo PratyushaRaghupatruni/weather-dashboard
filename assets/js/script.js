@@ -38,18 +38,19 @@ $("#city-search").on("click", function (event) {
 //function to create a button the city value the user enters
 function renderButtons(cityName) {
     $("#buttons-view").show();
-    $("#current").show();
     //<li>Calvin<span class="close">&times;</span></li>
     var liBtn = $("<li class='list-group-item city-btn text-center'>");
     liBtn.attr("id", cityName);
     liBtn.attr("data-name", cityName);
     liBtn.text(cityName);
     $(".list-group").append(liBtn);
+   citydata(cityName);
 }
 
 //function to display the current Day temperatures
 function displayTempinfo(cityName) {
     $("#current-day").empty();
+    $("#current").show();
     //API URL for fetching the temperature
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&apikey=" + apikey;
     $.ajax({
@@ -57,16 +58,16 @@ function displayTempinfo(cityName) {
         method: "GET"
     }).then(function (response) {
         console.log(response);
-
+  
         //creating the header dynamically
-        var header1 = $("<h6 class='font-weight-bold'>").text("Current Temperatures");
+        var header1 = $("<h3>").text("Current Temperatures");
         $("#current-day").append(header1);
 
         //getting the date from moment js 
         var date = moment().format(" MMMM Do YYYY");
        
         //cityname 
-        var cityDate = $("<p class='font-weight-bold'>").text(response.name + "(" + date + ")");
+        var cityDate = $("<h5>").text(response.name + "(" + date + ")");
         $("#current-day").append(cityDate);
        
 
