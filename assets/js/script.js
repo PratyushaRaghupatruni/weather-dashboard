@@ -1,51 +1,87 @@
-var cities = [];
-apikey = "f4b6deaac15c38f8264e61d13f7b99a1";
+var cities, citiesList;
+var apikey = "f4b6deaac15c38f8264e61d13f7b99a1";
 
-$(document).ready(function() {
+$(document).ready(function () {
     $("#5DayForecast").hide();
-    $("#buttons-view").hide();
     $("#current").hide();
- });
+    getstoredCities();
+
+});
 
 
 // We then created an AJAX call
 $("#city-search").on("click", function (event) {
     event.preventDefault();
- 
+
     //fetching the city we enter in the search field
     var cityName = $("#city-name").val();
-    //Acondition to test if city name is empty
-    if (cityName != '') {
-        for (i = 0; i <= cities.length; i++) {
-            //Checking for if the city name already exists
-            if (!cities.includes(cityName)) {
-                //if city name doesnot exit push it to array
-                cities.push(cityName);
-                //function to store the cities in local storage
-                cityStorage(cityName);
-                //And calling the function renderbutton to create a button for city value which user enters
-                renderButtons(cityName);
-            }
-        }
-    }
-    else {
+    //A condition to test if city name is empty
+    if (cityName === '') {
         return false;
     }
-    console.log(cities);
+    cityData(cityName);
     displayTempinfo(cityName);
+    $("#city-name").val("");
+
 });
 
 //function to create a button the city value the user enters
-function renderButtons(cityName) {
+function cityData(cityName) {
+
     $("#buttons-view").show();
-    //<li>Calvin<span class="close">&times;</span></li>
-    var liBtn = $("<li class='list-group-item city-btn text-center'>");
-    liBtn.attr("id", cityName);
-    liBtn.attr("data-name", cityName);
-    liBtn.text(cityName);
-    $(".list-group").append(liBtn);
-   citydata(cityName);
+
+    //getting the current cities stored from local storage
+    cities = JSON.parse(localStorage.getItem("cities"));
+
+    if (cities) {
+        if (!cities.includes(cityName)) {
+            cities.push(cityName);
+            localStorage.setItem("cities", JSON.stringify(cities));
+        }
+    }   
+    else {
+        cities = [cityName];
+        localStorage.setItem("cities", JSON.stringify(cities));
+    }
+    getstoredCities();
 }
+
+
+function getstoredCities() {
+
+    $("#buttons-view").show();
+    //fetchuing the list of cities from local storage
+    citiesList = JSON.parse(localStorage.getItem("cities"));
+    $("#list").empty();
+
+  //creating the buttons  
+    for (i = 0; i < citiesList.length; i++) {
+        var liBtn = $("<li class='list-group-item city-btn text-center'>");
+        liBtn.attr("id", citiesList[i]);
+        liBtn.attr("data-name", citiesList[i]);
+        liBtn.text(citiesList[i]);
+        $("#list").append(liBtn);
+
+        // button to del
+        var delbtn = $("<button class='close'>").text('\u00D7');
+        delbtn.addClass(citiesList[i]);
+        $("#" + citiesList[i]).append(delbtn);
+
+    }
+}
+
+//function to del the list of cities if the user wants to
+$(document).on("click", ".close", function () {
+    //fetching the ser clicked city
+    var closeBtn = $(this).parent().attr("id");
+    //deleting the element from array
+    $("#"+closeBtn).hide();
+    
+    citiesList.splice(closeBtn, 1);
+    //new submission after deleting the cities
+    localStorage.setItem("cities", JSON.stringify(citiesList));
+    
+});
 
 //function to display the current Day temperatures
 function displayTempinfo(cityName) {
@@ -53,31 +89,28 @@ function displayTempinfo(cityName) {
     $("#current").show();
     //API URL for fetching the temperature
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&apikey=" + apikey;
+
     $.ajax({
         url: queryURL,
         method: "GET"
     }).then(function (response) {
-        console.log(response);
-  
+
         //creating the header dynamically
         var header1 = $("<h3>").text("Current Temperatures");
         $("#current-day").append(header1);
 
         //getting the date from moment js 
         var date = moment().format(" MMMM Do YYYY");
-       
+
         //cityname 
         var cityDate = $("<h5>").text(response.name + "(" + date + ")");
         $("#current-day").append(cityDate);
-       
 
         //Image
         var image = $("<img>").attr("src", "http://openweathermap.org/img/wn/" +
             response.weather[0].icon + ".png").width('100px').height('100px');
         $("#current-day").append(image);
 
-        
-       
         //calculating the temperature
         var tempF = (response.main.temp - 273.15) * 1.80 + 32;
         var temp = $("<p>").text("Temperature: " + tempF.toFixed(2) + " °F");
@@ -163,10 +196,11 @@ function forecastDays(forecastqueryUrl) {
 
         for (i = 0; i < forecast.length; i++) {
 
-            if ((forecastresponse.list[i].dt_txt).substr(11, 8) == "00:00:00") {
+            if ((forecastresponse.list[i].dt_txt).substr(11, 8) == "00:00:00") { //because the values are updating every 3hrs
 
-                var card = $("<div class='card shadow-lg text-white bg-primary mb-10 p-2'>");
+                var card = $("<div class='card  text-white text-center bg-primary mb-10 p-2'>");
                 $("#forecast").append(card);
+
                 //date to display
                 var date = (forecastresponse.list[i].dt_txt).substr(8, 2);
                 var month = (forecastresponse.list[i].dt_txt).substr(5, 2);
@@ -196,8 +230,3 @@ $(document).on("click", ".city-btn", function () {
     var cityName = $(this).attr("data-name");
     displayTempinfo(cityName);
 });
-
-function cityStorage(cityName) {
-    window.localStorage.setItem("cityname", cityName);
-}
-
