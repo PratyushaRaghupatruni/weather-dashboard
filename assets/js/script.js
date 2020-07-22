@@ -1,4 +1,4 @@
-var cities, citiesList;
+var cities;
 var apikey = "f4b6deaac15c38f8264e61d13f7b99a1";
 
 $(document).ready(function () {
@@ -14,7 +14,8 @@ $("#city-search").on("click", function (event) {
     event.preventDefault();
 
     //fetching the city we enter in the search field
-    var cityName = $("#city-name").val().trim();
+    var cityName = $("#city-name").val();
+    console.log(cityName);
     //A condition to test if city name is empty
     if (cityName === '') {
         return false;
@@ -38,7 +39,7 @@ function cityData(cityName) {
             cities.push(cityName);
             localStorage.setItem("cities", JSON.stringify(cities));
         }
-    }   
+    }
     else {
         cities = [cityName];
         localStorage.setItem("cities", JSON.stringify(cities));
@@ -51,42 +52,24 @@ function getstoredCities() {
 
     $("#buttons-view").show();
     //fetchuing the list of cities from local storage
-    citiesList = JSON.parse(localStorage.getItem("cities"));
+    var citiesList = JSON.parse(localStorage.getItem("cities"));
     $("#list").empty();
-
-  //creating the buttons  
+    console.log(citiesList);
+    //creating the buttons  
     for (i = 0; i < citiesList.length; i++) {
         var liBtn = $("<li class='list-group-item city-btn text-center'>");
         liBtn.attr("id", citiesList[i]);
         liBtn.attr("data-name", citiesList[i]);
         liBtn.text(citiesList[i]);
         $("#list").append(liBtn);
-
-        // button to del
-        var delbtn = $("<span class='close'>").text('\u00D7');
-        delbtn.addClass(citiesList[i]);
-        $("#" + citiesList[i]).append(delbtn);
-
     }
 }
 
-//function to del the list of cities if the user wants to
-$(document).on("click", ".close", function () {
-    //fetching the ser clicked city
-    var closeBtn = $(this).parent().attr("id");
-    $("#"+closeBtn).hide();
-    
-     //deleting the element from array
-    citiesList.splice(closeBtn, 1);
-    //new submission after deleting the cities
-    localStorage.setItem("cities", JSON.stringify(citiesList));
-    
-});
 
 //function to display the current Day temperatures
 function displayTempinfo(cityName) {
-    $("#current-day").empty();
-    $("#current").show();
+  
+    
     //API URL for fetching the temperature
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&apikey=" + apikey;
 
@@ -94,7 +77,8 @@ function displayTempinfo(cityName) {
         url: queryURL,
         method: "GET"
     }).then(function (response) {
-
+        $("#current").show();
+        $("#current-day").empty();
         //creating the header dynamically
         var header1 = $("<h3>").text("Current Temperatures");
         $("#current-day").append(header1);
