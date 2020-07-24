@@ -1,11 +1,10 @@
-var citiesList;
+var cities;
 var apikey = "f4b6deaac15c38f8264e61d13f7b99a1";
 
 $(document).ready(function () {
     $("#5DayForecast").hide();
     $("#current").hide();
     getstoredCities();
-
 });
 
 
@@ -23,6 +22,7 @@ $("#city-search").on("click", function (event) {
     cityData(cityName);
     displayTempinfo(cityName);
     $("#city-name").val("");
+    console.log("cityname"+cityName);
 
 });
 
@@ -33,7 +33,7 @@ function cityData(cityName) {
 
     //getting the current cities stored from local storage
    var cities = JSON.parse(localStorage.getItem("cities"));
-
+    console.log(cities);
     if (cities) {
         if (!cities.includes(cityName)) {
             cities.push(cityName);
@@ -51,12 +51,9 @@ function cityData(cityName) {
 function getstoredCities() {
 
     //fetching the list of cities from local storage
-      citiesList = JSON.parse(localStorage.getItem("cities"));
-
+   var citiesList = JSON.parse(localStorage.getItem("cities"));
     $("#list").empty();
     console.log(citiesList);
-    var cityLength = citiesList.length;
-    console.log(cityLength);
     //creating the buttons  
     for (i = 0; i < citiesList.length; i++) {
         var liBtn = $("<li class='list-group-item city-btn text-center'>");
@@ -73,17 +70,17 @@ function displayTempinfo(cityName) {
 
     //API URL for fetching the temperature
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&apikey=" + apikey;
-   
+
 
     $.ajax({
         url: queryURL,
         method: "GET"
     }).then(function (response) {
 
-        
-        $("#current").show();
 
+        $("#current").show();
         $("#current-day").empty();
+
         //creating the header dynamically
         var header1 = $("<h3>").text("Current Temperatures");
         $("#current-day").append(header1);
@@ -125,23 +122,22 @@ function displayTempinfo(cityName) {
         var cityId = response.id;
         var forecastqueryUrl = "http://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&units=imperial&appid=" + apikey;
         forecastDays(forecastqueryUrl);
-
-
-    }).fail((cityName) => {
+    }).fail(() => {
         alert("City doesn't Exist!!");
-        var error = $("<p>").text("invalid city Name");
+        $("#current-day").empty();
+        var error = $("<h1>").text("Invalid City Name");
         console.log(error);
         $("#current-day").append(error);
-        console.log(citiesList);
-        var closeLi = response.name;
-        console.log(closeLi);
-        citiesList.splice(closeLi,1);
-        localStorage.setItem("cities", JSON.stringify(citiesList));
-        getstoredCities();
+        $("#5DayForecast").empty();
+        $("#forecast").empty();
+    
+       // citiesList.splice(cityName, 1);
+      // localStorage.setItem("cities", JSON.stringify(citiesList));
+     //  getstoredCities();
+
     });
 
 }
-
 
 //function to display uvindex values
 function uvIndex(uvqueryURL) {
@@ -182,8 +178,9 @@ function uvIndex(uvqueryURL) {
 //function to display 5 days forecast
 function forecastDays(forecastqueryUrl) {
 
-    $("#5DayForecast").show();
+   
     $("#forecast").empty();
+    $("#5DayForecast").show();
 
     console.log(forecastqueryUrl);
     $.ajax({
@@ -194,7 +191,6 @@ function forecastDays(forecastqueryUrl) {
         $("#forecast").empty();
 
         var forecast = forecastresponse.list;
-
 
         for (i = 0; i < forecast.length; i++) {
 
