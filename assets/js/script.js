@@ -126,7 +126,7 @@ function displayTempinfo(cityName) {
         forecastDays(forecastqueryUrl);
         cityData(cityName);
     }).fail(() => {
-        alert("City doesn't Exist!!");
+        // if its a invalid city name
         $("#current-day").empty();
         var error = $("<h1>").text("Invalid City Name");
         console.log(error);
@@ -134,10 +134,6 @@ function displayTempinfo(cityName) {
         $("#5DayForecast").empty();
         $("#forecast").empty();
     
-       // citiesList.splice(cityName, 1);
-      // localStorage.setItem("cities", JSON.stringify(citiesList));
-     //  getstoredCities();
-
     });
 
 }
