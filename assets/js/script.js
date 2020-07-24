@@ -19,8 +19,9 @@ $("#city-search").on("click", function (event) {
     if (cityName === '') {
         return false;
     }
-    cityData(cityName);
+ 
     displayTempinfo(cityName);
+ 
     $("#city-name").val("");
     console.log("cityname"+cityName);
 
@@ -121,7 +122,9 @@ function displayTempinfo(cityName) {
         //geting the city id to display forecast for 5 days      
         var cityId = response.id;
         var forecastqueryUrl = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&units=imperial&appid=" + apikey;
+       
         forecastDays(forecastqueryUrl);
+        cityData(cityName);
     }).fail(() => {
         alert("City doesn't Exist!!");
         $("#current-day").empty();
@@ -221,6 +224,7 @@ function forecastDays(forecastqueryUrl) {
             }
         }
     });
+    
 }
 
 $(document).on("click", ".city-btn", function () {
