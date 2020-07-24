@@ -93,7 +93,7 @@ function displayTempinfo(cityName) {
         $("#current-day").append(cityDate);
 
         //Image
-        var image = $("<img>").attr("src", "http://openweathermap.org/img/wn/" +
+        var image = $("<img>").attr("src", "https://openweathermap.org/img/wn/" +
             response.weather[0].icon + ".png").width('100px').height('100px');
         $("#current-day").append(image);
 
@@ -115,12 +115,12 @@ function displayTempinfo(cityName) {
         var longitude = response.coord.lon;
 
         //uv queryURL
-        var uvqueryURL = "http://api.openweathermap.org/data/2.5/uvi?appid=" + apikey + "&lat=" + lattitude + "&lon=" + longitude;
+        var uvqueryURL = "https://api.openweathermap.org/data/2.5/uvi?appid=" + apikey + "&lat=" + lattitude + "&lon=" + longitude;
         uvIndex(uvqueryURL);
 
         //geting the city id to display forecast for 5 days      
         var cityId = response.id;
-        var forecastqueryUrl = "http://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&units=imperial&appid=" + apikey;
+        var forecastqueryUrl = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&units=imperial&appid=" + apikey;
         forecastDays(forecastqueryUrl);
     }).fail(() => {
         alert("City doesn't Exist!!");
@@ -207,7 +207,7 @@ function forecastDays(forecastqueryUrl) {
                 card.append(tempdate);
 
                 //Image Icon
-                var image = $("<img>").attr("src", "http://openweathermap.org/img/wn/"
+                var image = $("<img>").attr("src", "https://openweathermap.org/img/wn/"
                     + forecastresponse.list[i].weather[0].icon + ".png").width('100px').height('100px');
                 card.append(image);
 
