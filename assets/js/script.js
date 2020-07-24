@@ -19,11 +19,11 @@ $("#city-search").on("click", function (event) {
     if (cityName === '') {
         return false;
     }
- 
+
     displayTempinfo(cityName);
- 
+
     $("#city-name").val("");
-    console.log("cityname"+cityName);
+    console.log("cityname" + cityName);
 
 });
 
@@ -33,7 +33,7 @@ function cityData(cityName) {
     $("#buttons-view").show();
 
     //getting the current cities stored from local storage
-   var cities = JSON.parse(localStorage.getItem("cities"));
+    var cities = JSON.parse(localStorage.getItem("cities"));
     console.log(cities);
     if (cities) {
         if (!cities.includes(cityName)) {
@@ -52,7 +52,7 @@ function cityData(cityName) {
 function getstoredCities() {
 
     //fetching the list of cities from local storage
-   var citiesList = JSON.parse(localStorage.getItem("cities"));
+    var citiesList = JSON.parse(localStorage.getItem("cities"));
     $("#list").empty();
     console.log(citiesList);
     //creating the buttons  
@@ -122,18 +122,18 @@ function displayTempinfo(cityName) {
         //geting the city id to display forecast for 5 days      
         var cityId = response.id;
         var forecastqueryUrl = "https://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&units=imperial&appid=" + apikey;
-       
+
         forecastDays(forecastqueryUrl);
         cityData(cityName);
     }).fail(() => {
         // if its a invalid city name
         $("#current-day").empty();
-        var error = $("<h1>").text("Invalid City Name");
+        var error = $("<h3>").text("Invalid City Name");
         console.log(error);
         $("#current-day").append(error);
         $("#5DayForecast").empty();
         $("#forecast").empty();
-    
+
     });
 
 }
@@ -177,11 +177,11 @@ function uvIndex(uvqueryURL) {
 //function to display 5 days forecast
 function forecastDays(forecastqueryUrl) {
 
-   
+
     $("#forecast").empty();
     $("#5DayForecast").show();
     $("#forecast").show();
-    
+
     console.log(forecastqueryUrl);
     $.ajax({
         url: forecastqueryUrl,
@@ -220,7 +220,7 @@ function forecastDays(forecastqueryUrl) {
             }
         }
     });
-    
+
 }
 
 $(document).on("click", ".city-btn", function () {
