@@ -189,7 +189,6 @@ function forecastDays(forecastqueryUrl) {
         method: "GET"
     }).then(function (forecastresponse) {
 
-        $("#forecast").empty();
 
         var forecast = forecastresponse.list;
 
