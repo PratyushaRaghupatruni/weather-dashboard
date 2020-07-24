@@ -1,4 +1,4 @@
-var cities;
+var citiesList;
 var apikey = "f4b6deaac15c38f8264e61d13f7b99a1";
 
 $(document).ready(function () {
@@ -32,29 +32,31 @@ function cityData(cityName) {
     $("#buttons-view").show();
 
     //getting the current cities stored from local storage
-    cities = JSON.parse(localStorage.getItem("cities"));
+   var cities = JSON.parse(localStorage.getItem("cities"));
 
     if (cities) {
         if (!cities.includes(cityName)) {
             cities.push(cityName);
-            localStorage.setItem("cities", JSON.stringify(cities));
         }
     }
     else {
         cities = [cityName];
-        localStorage.setItem("cities", JSON.stringify(cities));
     }
+    localStorage.setItem("cities", JSON.stringify(cities));
+    console.log(cities);
     getstoredCities();
 }
 
 
 function getstoredCities() {
 
-    $("#buttons-view").show();
-    //fetchuing the list of cities from local storage
-    var citiesList = JSON.parse(localStorage.getItem("cities"));
+    //fetching the list of cities from local storage
+      citiesList = JSON.parse(localStorage.getItem("cities"));
+
     $("#list").empty();
     console.log(citiesList);
+    var cityLength = citiesList.length;
+    console.log(cityLength);
     //creating the buttons  
     for (i = 0; i < citiesList.length; i++) {
         var liBtn = $("<li class='list-group-item city-btn text-center'>");
@@ -68,16 +70,19 @@ function getstoredCities() {
 
 //function to display the current Day temperatures
 function displayTempinfo(cityName) {
-  
-    
+
     //API URL for fetching the temperature
     var queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + cityName + "&apikey=" + apikey;
+   
 
     $.ajax({
         url: queryURL,
         method: "GET"
     }).then(function (response) {
+
+        
         $("#current").show();
+
         $("#current-day").empty();
         //creating the header dynamically
         var header1 = $("<h3>").text("Current Temperatures");
@@ -112,7 +117,6 @@ function displayTempinfo(cityName) {
         var lattitude = response.coord.lat;
         var longitude = response.coord.lon;
 
-
         //uv queryURL
         var uvqueryURL = "http://api.openweathermap.org/data/2.5/uvi?appid=" + apikey + "&lat=" + lattitude + "&lon=" + longitude;
         uvIndex(uvqueryURL);
@@ -121,9 +125,23 @@ function displayTempinfo(cityName) {
         var cityId = response.id;
         var forecastqueryUrl = "http://api.openweathermap.org/data/2.5/forecast?id=" + cityId + "&units=imperial&appid=" + apikey;
         forecastDays(forecastqueryUrl);
+
+
+    }).fail((cityName) => {
+        alert("City doesn't Exist!!");
+        var error = $("<p>").text("invalid city Name");
+        console.log(error);
+        $("#current-day").append(error);
+        console.log(citiesList);
+        var closeLi = response.name;
+        console.log(closeLi);
+        citiesList.splice(closeLi,1);
+        localStorage.setItem("cities", JSON.stringify(citiesList));
+        getstoredCities();
     });
 
 }
+
 
 //function to display uvindex values
 function uvIndex(uvqueryURL) {
