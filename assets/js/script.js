@@ -181,7 +181,8 @@ function forecastDays(forecastqueryUrl) {
    
     $("#forecast").empty();
     $("#5DayForecast").show();
-
+    $("#forecast").show();
+    
     console.log(forecastqueryUrl);
     $.ajax({
         url: forecastqueryUrl,
